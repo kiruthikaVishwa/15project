@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Sudoku</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 20px;
+        }
+        
+        td {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            border: 1px solid black;
+        }
+        
+        input {
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Simple Sudoku</h2>
+    <table id="sudoku-board">
+        <!-- Sudoku board will be generated here -->
+    </table>
+    <br>
+    <button onclick="solveSudoku()">Solve Sudoku</button>
+
+    <script>
+        // Predefined Sudoku puzzle (0 represents empty cells)
+        const initialBoard = [
+            [5, 3, 0, 0, 7, 0, 0, 0, 0],
+            [6, 0, 0, 1, 9, 5, 0, 0, 0],
+            [0, 9, 8, 0, 0, 0, 0, 6, 0],
+            [8, 0, 0, 0, 6, 0, 0, 0, 3],
+            [4, 0, 0, 8, 0, 3, 0, 0, 1],
+            [7, 0, 0, 0, 2, 0, 0, 0, 6],
+            [0, 6, 0, 0, 0, 0, 2, 8, 0],
+            [0, 0, 0, 4, 1, 9, 0, 0, 5],
+            [0, 0, 0, 0, 8, 0, 0, 7, 9]
+        ];
+
+        // Create a Sudoku board with 9x9 grid
+        function createBoard() {
+            let board = document.getElementById('sudoku-board');
+            for (let i = 0; i < 9; i++) {
+                let row = document.createElement('tr');
+                for (let j = 0; j < 9; j++) {
+                    let cell = document.createElement('td');
+                    let input = document.createElement('input');
+                    input.type = 'number';
+                    input.min = '1';
+                    input.max = '9';
+                    input.setAttribute('maxlength', '1');
+
+                    // Pre-fill the cells with initial values
+                    if (initialBoard[i][j] !== 0) {
+                        input.value = initialBoard[i][j];
+                        input.disabled = true; // Disable input for already filled cells
+                    }
+
+                    cell.appendChild(input);
+                    row.appendChild(cell);
+                }
+                board.appendChild(row);
+            }
+        }
+
+        // Solve the Sudoku puzzle (using backtracking algorithm)
+        function solveSudoku() {
+            let grid = [];
+            let inputs = document.querySelectorAll('input');
+            for (let i = 0; i < 9; i++) {
+                let row = [];
+                for (let j = 0; j < 9; j++) {
+                    let value = inputs[i * 9 + j].value ? parseInt(inputs[i * 9 + j].value) : 0;
+                    row.push(value);
+                }
+                grid.push(row);
+            }
+
+            if (solve(grid)) {
+                // Update the board with solved values
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        inputs[i * 9 + j].value = grid[i][j] !== 0 ? grid[i][j] : '';
+                    }
+                }
+            } else {
+                alert('No solution found');
+            }
+        }
+
+        // Check if a number can be placed in the current position
+        function isValid(grid, row, col, num) {
+            // Check the row
+            for (let i = 0; i < 9; i++) {
+                if (grid[row][i] === num) {
+                    return false;
+                }
+            }
+            // Check the column
+            for (let i = 0; i < 9; i++) {
+                if (grid[i][col] === num) {
+                    return false;
+                }
+            }
+            // Check the 3x3 subgrid
+            let startRow = Math.floor(row / 3) * 3;
+            let startCol = Math.floor(col / 3) * 3;
+            for (let i = 0; i < 3; i++) {
+                for (let j = 0; j < 3; j++) {
+                    if (grid[startRow + i][startCol + j] === num) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        // Solve the puzzle using backtracking
+        function solve(grid) {
+            for (let row = 0; row < 9; row++) {
+                for (let col = 0; col < 9; col++) {
+                    if (grid[row][col] === 0) { // Empty cell
+                        for (let num = 1; num <= 9; num++) {
+                            if (isValid(grid, row, col, num)) {
+                                grid[row][col] = num;
+                                if (solve(grid)) {
+                                    return true;
+                                }
+                                grid[row][col] = 0;
+                            }
+                        }
+                        return false; // Backtrack
+                    }
+                }
+            }
+            return true; // Puzzle solved
+        }
+
+        // Initialize the Sudoku board
+        createBoard();
+    </script>
+</body>
+
+</html>

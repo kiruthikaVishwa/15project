@@ -1,0 +1,56 @@
+/* style.css */
+
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f7f7f7;
+}
+
+.chatBot {
+    border: 3px solid #2F8D46;
+    border-radius: 10px;
+    width: 500px;
+    margin: 50px auto;
+    background: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    background-color: #2F8D46;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 7px 7px 0 0;
+}
+
+header h2 {
+    color: white;
+}
+
+.chatbox {
+    list-style: none;
+    padding: 15px;
+    height: 400px;
+    overflow-y: auto;
+}
+
+.chat-input {
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
+
+.chat-input textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    resize: none;
+}
+
+#sendBTN {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    background-color: #2F8D46;
+    color: white;
+    cursor: pointer;
+    border-radius: 7px;
+}
